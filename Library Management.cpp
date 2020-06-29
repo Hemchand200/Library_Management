@@ -78,3 +78,101 @@ class student
 		}
 		int admno;						//Admission No
 };
+/*End of class Students*/
+
+bool res_student(int);					//To check whether the admission no. already exist or not
+void student::creates()                //To enter values to all data members of class student
+{
+	int i;
+	plane:
+	system("CLS");
+	cout<<"\n\t\tEnter the details:-\n";
+	cout<<"\n\t\tEnter student's Admission no: ";
+	cin>>admno;
+	if(res_student(admno))
+	{
+		cout<<"\n\t\tRecord already exist with this admission no.";
+		cout<<"\n\t\tEnter a different admission no.\n";
+		system("PAUSE");
+		goto plane;
+	}
+	cout<<"\n\t\tEnter student's Name: ";
+	char n[50];
+	cin.getline(n,50);
+	cin.getline(name,25);
+	for(i=0;name[i]!='\0';i++)
+	{
+		if(name[i]>='a'&&name[i]<='z')
+		name[i]-=32;
+	}
+	bno=0;
+	token=0;
+}
+
+
+void student::shows()                                     //Show details of Students
+{
+	cout<<"\n\t\tStudent's Admission No.: "<<admno<<el;
+	cout<<"\n\t\tStudent's Name: "<<name<<el;
+	if(token==1)
+	{
+		cout<<"\n\t\tBook Issued (Book no): "<<bno;
+	}
+}
+
+
+void student::showlist()                                  // To display Student details in list form
+{
+	cout<<"\n\t"<<admno<<"\t\t"<<name<<"\t\t"<<bno;
+}
+
+
+/*To Write object of class book in file*/
+void write_book()
+{
+	book bk;
+	ofstream outf("book1.bin",ios::app|ios::binary);
+	outf.seekp(0,ios::end);
+	int x=outf.tellp()/sizeof(book);
+	bk.assignbno(x);
+	bk.createb();
+	bk.showb();
+	outf.write(reinterpret_cast<char *>(&bk),sizeof(book));
+	cout<<"\n\t\tRecord added successfully";
+	outf.close();
+}
+
+
+/*To Write object of class student in file*/
+void write_student()
+{
+	student st;
+	ofstream outf("student.bin",ios::app|ios::binary);
+	outf.seekp(0,ios::end);
+	st.creates();
+	st.shows();
+	outf.write(reinterpret_cast<char *>(&st),sizeof(student));
+	cout<<"\n\t\tRecord added successfully";
+	outf.close();
+}
+
+/*To display Student records in list form*/
+void list_student()
+{
+	system("CLS");
+	student st;
+	ifstream intf("student.bin",ios::in|ios::binary);
+	intf.seekg(0,ios::beg);
+	if(!intf)
+	cout<<"\n\t\tFile not found";
+	else
+	{
+		cout<<"\n\t*****Students Details*****\n\n";
+		cout<<"\n\tAdmission No:\tName: \tBook Issued:";
+		while(intf.read(reinterpret_cast<char *>(&st),sizeof(student)))
+		st.showlist();
+	}
+	intf.close();
+}
+
+
